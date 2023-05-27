@@ -1934,7 +1934,7 @@ var setup_print_tweaks = function setup_print_tweaks() {
 
 // Get calendar list
 var calendar_list = function calendar_list() {
-  var calendars = $('div.calendar_list li.available_calendar');
+  var calendars = $('div.calendar_list li.available_calendar').not('.hidden_calendar');;
   var total = calendars.length;
   var result = [];
 
