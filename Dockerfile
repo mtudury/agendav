@@ -13,9 +13,12 @@ FROM node:20 as buildernpm
 
 WORKDIR /app/
 
-COPY --from=builder /app /app
+COPY ./package.json ./
 
 RUN npm install
+
+COPY --from=builder /app /app
+
 RUN npm run build:templates
 RUN npm run build:css
 RUN npm run prebuild:js
