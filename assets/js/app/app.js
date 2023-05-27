@@ -1060,6 +1060,10 @@ var update_calendar_list = function update_calendar_list(maskbody) {
 
   updcalendar_ajax_req.done(function(data, textStatus, jqXHR) {
     var was_hidden = {};
+    lshc = localStorage.getItem("hiddenCalendars");
+    if (lshc) {
+      was_hidden = JSON.parse(lshc);
+    }
 
     // Remove old eventSources and remove every list item
     $('.calendar_list li.available_calendar').each(function(index) {
@@ -1087,7 +1091,6 @@ var update_calendar_list = function update_calendar_list(maskbody) {
       if (AgenDAVUserPrefs.hidden_calendars[calendar.calendar] !== undefined) {
         return true; // Equivalent to 'continue' inside a $.each
       }
-      count++;
 
       // Some values need to be generated
       if (calendar.color === undefined || calendar.color === null) {
@@ -1106,6 +1109,7 @@ var update_calendar_list = function update_calendar_list(maskbody) {
       if (was_hidden[calendar.calendar]) {
         li.addClass('hidden_calendar');
       } else {
+        count++;
         collected_event_sources.push($(li).data().eventsource);
       }
 
@@ -1881,6 +1885,15 @@ var toggle_calendar = function toggle_calendar(calendar_obj) {
   } else {
     hide_calendar(calendar_obj);
   }
+
+  var was_hidden = {};
+  $('.calendar_list li.available_calendar').each(function(index) {
+    if ($(this).hasClass('hidden_calendar')) {
+      was_hidden[$(this).attr('data-calendar-url')] = true;
+    }
+  });
+
+  localStorage.setItem("hiddenCalendars", JSON.stringify(was_hidden));
 };
 
 // Gets csrf token value
