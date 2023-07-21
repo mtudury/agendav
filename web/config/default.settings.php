@@ -157,3 +157,7 @@ $app['calendar.colors'] = [
 
 // Additionnal authentication methods
 //$app['auth.methods'] = ['AgenDAV\Authentication\HttpBasic'];
+
+$app['workflow.url'] = 'AGENDAV_WORKFLOW_URL';
+
+$app['workflow.key'] = 'AGENDAV_WORKFLOW_KEY';

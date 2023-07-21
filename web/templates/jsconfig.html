@@ -2,6 +2,8 @@ var AgenDAVConf = {{ site_config|json_encode|raw }};
 
 var AgenDAVUserPrefs = {{ preferences|json_encode|raw }};
 
+var AgenDAVUser = '{{ username }}';
+
 function set_default_colorpicker_options() {
   $.fn.colorPicker.defaultColors = AgenDAVConf.calendar_colors;
 }

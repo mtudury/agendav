@@ -47,6 +47,7 @@ class JavaScriptCode
             $app['twig']->render('jsconfig.html', [
                 'site_config' => $site_config,
                 'preferences' => $preferences,
+                'username' => $app['session']->get('username'),
             ])
         );
 
@@ -75,6 +76,8 @@ class JavaScriptCode
             'calendar_colors' => $app['calendar.colors'],
             'default_calendar_color' => '#' . $app['calendar.colors'][0],
             'show_public_caldav_url' => $app['caldav.publicurls'],
+            'workflow_url' => $app['workflow.url'],
+            'workflow_key' => sha1($app['workflow.key'] . $app['session']->get('username') . date("Ymd")),
         ];
 
         if ($app['caldav.publicurls']) {

@@ -651,6 +651,13 @@ var open_event_edit_dialog = function open_event_edit_dialog(event) {
   // Log to console for debugging purposes
   console.log(event);
 
+  // Specific: Really specific to my usage
+  if (AgenDAVUser.indexOf('reservation')==0) {
+    window.open(AgenDAVConf.workflow_url+"?user="+AgenDAVUser+"&dtdemande="+event.start_date+"&hstartdemande="+event.start_time+"&henddemande="+event.end_time+"&key="+AgenDAVConf.workflow_key, "_blank");
+    return;
+  }
+  // EndOfSpecific
+
   var button_save = {
     'text': t('labels', 'save'),
     'class': 'addicon btn-icon-event-edit',
