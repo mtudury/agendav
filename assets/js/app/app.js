@@ -1914,7 +1914,9 @@ var select_calendar = function (calendar_obj) {
   $.map(shared_cals, function(e, i) {
     var item = $(e);
     if (item.attr('data-calendar-url') == calendar_obj.attr('data-calendar-url')) {
-      show_calendar(item);
+      if (item.hasClass('hidden_calendar')) {
+        show_calendar(item);
+      }
     } else {
       hide_calendar(item);
     }
