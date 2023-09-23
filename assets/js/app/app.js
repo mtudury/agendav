@@ -265,7 +265,9 @@ $(document).ready(function() {
   /*************************************************************
    * Calendar list events
    *************************************************************/
-
+  var shifted = false;
+  $(document).on('keydown', function(e){shifted = e.shiftKey; } );
+  $(document).on('keyup', function(e){shifted = false; } );
   // Editing a calendar
   $('div.calendar_list').on('click', 'i.cfg', function(e) {
     e.stopPropagation();
@@ -274,7 +276,11 @@ $(document).ready(function() {
   })
   .on('click', 'li.available_calendar', function(e) {
     // Make calendar hidden
-    toggle_calendar($(this));
+    if (shifted) {
+      toggle_calendar($(this));
+    } else {
+      select_calendar($(this));
+    }
   });
 
   // First time load: create calendar list
@@ -1901,6 +1907,18 @@ var toggle_calendar = function toggle_calendar(calendar_obj) {
   });
 
   localStorage.setItem("hiddenCalendars", JSON.stringify(was_hidden));
+};
+
+var select_calendar = function (calendar_obj) {
+  var shared_cals = $('.calendar_list').find('ul').children();
+  $.map(shared_cals, function(e, i) {
+    var item = $(e);
+    if (item.attr('data-calendar-url') == calendar_obj.attr('data-calendar-url')) {
+      show_calendar(item);
+    } else {
+      hide_calendar(item);
+    }
+  });
 };
 
 // Gets csrf token value

@@ -53,7 +53,7 @@ class Csrf
 
         if (!$app['csrf.manager']->isTokenValid($token)) {
             $app['monolog']->addDebug('CSRF token is not valid. Aborting');
-            $app->abort(401, 'Invalid CSRF token');
+            $app->abort(401, 'Invalid CSRF token, Session expirée <a href="/login">Retour à l\'identification</a>');
             return;
         }
 
