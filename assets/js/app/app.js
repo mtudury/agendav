@@ -1891,14 +1891,8 @@ var hide_calendar = function hide_calendar(calendar_obj) {
   calendar_obj.addClass('hidden_calendar');
 };
 
-// Toggles calendar visibility
-var toggle_calendar = function toggle_calendar(calendar_obj) {
-  if (calendar_obj.hasClass('hidden_calendar')) {
-    show_calendar(calendar_obj);
-  } else {
-    hide_calendar(calendar_obj);
-  }
 
+var save_hidden = function () {
   var was_hidden = {};
   $('.calendar_list li.available_calendar').each(function(index) {
     if ($(this).hasClass('hidden_calendar')) {
@@ -1907,6 +1901,17 @@ var toggle_calendar = function toggle_calendar(calendar_obj) {
   });
 
   localStorage.setItem("hiddenCalendars", JSON.stringify(was_hidden));
+};
+
+// Toggles calendar visibility
+var toggle_calendar = function toggle_calendar(calendar_obj) {
+  if (calendar_obj.hasClass('hidden_calendar')) {
+    show_calendar(calendar_obj);
+  } else {
+    hide_calendar(calendar_obj);
+  }
+
+  save_hidden();
 };
 
 var select_calendar = function (calendar_obj) {
@@ -1921,6 +1926,8 @@ var select_calendar = function (calendar_obj) {
       hide_calendar(item);
     }
   });
+
+  save_hidden();
 };
 
 // Gets csrf token value
