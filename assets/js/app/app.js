@@ -77,7 +77,7 @@ $(document).ready(function() {
   };
 
   // Enable full calendar
-  $('#calendar_view').fullCalendar({
+  var fullCalendarOptions = {
     selectable: true,
     editable: true,
     timezone: AgenDAVUserPrefs.timezone,
@@ -140,7 +140,22 @@ $(document).ready(function() {
 
     eventResize: event_resize_callback,
     eventDrop: event_drop_callback
-  });
+  };
+
+
+  // Get initialDate from query string
+  var urlParams = new URLSearchParams(window.location.search);
+  var initialDate = urlParams.get('initialDate');
+  var view = urlParams.get('view');
+  if (view) {
+    fullCalendarOptions.defaultView = fullcalendar_views[view];
+  }
+
+  $('#calendar_view').fullCalendar(fullCalendarOptions);
+  if (initialDate) {
+    $('#calendar_view').fullCalendar('gotoDate', initialDate);
+  }
+
 
   // Event details popup
   event_details_popup = $('#event_details').qtip({
@@ -1099,6 +1114,26 @@ var update_calendar_list = function update_calendar_list(maskbody) {
       collected_event_sources = [];
 
     var calendars = data.data;
+
+    if (Object.keys(was_hidden).length == 0) {
+      var first = true;
+      $.each(calendars, function(key, calendar) {
+          was_hidden[calendar.url] = !first;
+          first = false;
+      });
+    }
+
+    var urlParams = new URLSearchParams(window.location.search);
+    var initialCalendar = urlParams.get('calendar');
+    if (initialCalendar) {
+      $.each(calendars, function(key, calendar) {
+        if (calendar.url.indexOf(initialCalendar) !== -1) {
+          was_hidden[calendar.url] = false;
+        } else {
+          was_hidden[calendar.url] = true;
+        }
+      });
+    }
 
     $.each(calendars, function(key, calendar) {
       // This is a hidden calendar
