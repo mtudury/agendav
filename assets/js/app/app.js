@@ -659,7 +659,8 @@ var open_event_edit_dialog = function open_event_edit_dialog(event) {
 
   // Specific: Really specific to my usage
   if (AgenDAVUser.indexOf('reservation')==0) {
-    window.open(AgenDAVConf.workflow_url+"?user="+AgenDAVUser+"&dtdemande="+event.start_date+"&hstartdemande="+event.start_time+"&henddemande="+event.end_time+"&key="+AgenDAVConf.workflow_key, "_blank");
+    current_cal = get_current_calendar().attr('data-calendar-url').split('/')[2];
+    window.open(AgenDAVConf.workflow_url+"?user="+AgenDAVUser+"&location="+current_cal+"&dtdemande="+event.start_date+"&hstartdemande="+event.start_time+"&henddemande="+event.end_time+"&key="+AgenDAVConf.workflow_key, "_blank");
     return;
   }
   // EndOfSpecific
@@ -1929,6 +1930,18 @@ var select_calendar = function (calendar_obj) {
 
   save_hidden();
 };
+
+var get_current_calendar = function() {
+  var shared_cals = $('.calendar_list').find('ul').children();
+  var current_cal = null;
+  $.map(shared_cals, function(e, i) {
+    var item = $(e);
+    if (!item.hasClass('hidden_calendar')) {
+      current_cal = item;
+    }
+  });
+  return current_cal;
+}
 
 // Gets csrf token value
 var get_csrf_token = function get_csrf_token() {
