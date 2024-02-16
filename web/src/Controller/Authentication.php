@@ -33,6 +33,7 @@ class Authentication
     {
         $success = false;
         $template_vars = [];
+        $template_vars['queryall'] = $request->query->all();
 
         if ($request->isMethod('POST')) {
             $user = $request->request->get('user');
@@ -48,7 +49,7 @@ class Authentication
                         sprintf('User %s logged in from %s', $user, $request->getClientIp())
                     );
                     return new RedirectResponse(
-                        $app['url_generator']->generate('calendar')
+                        $app['url_generator']->generate('calendar', $request->query->all())
                     );
                 }
 

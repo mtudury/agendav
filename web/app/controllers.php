@@ -79,7 +79,7 @@ $controllers->before(function(Request $request, Silex\Application $app) {
     if ($request->isXmlHttpRequest()) {
         return new JsonResponse([], 401);
     } else {
-        return new RedirectResponse($app['url_generator']->generate('login'));
+        return new RedirectResponse($app['url_generator']->generate('login', $request->query->all()));
     }
 });
 
