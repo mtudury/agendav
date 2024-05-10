@@ -1750,6 +1750,14 @@ var event_alter = function event_alter(alterType, event, delta, allDay, revertFu
 var event_delete = function event_delete(event_id) {
   var data = get_event_data(event_id);
 
+  // Specific: Really specific to my usage
+  if (AgenDAVUser.indexOf('reservation')==0) {
+    current_cal = get_current_calendar().attr('data-calendar-url').split('/')[2];
+    window.open(AgenDAVConf.workflow_url+"?action=delete&uid="+data.uid+"&user="+AgenDAVUser+"&location="+current_cal+"&dtdemande="+event.start_date+"&hstartdemande="+event.start_time+"&henddemande="+event.end_time+"&key="+AgenDAVConf.workflow_key, "_blank");
+    return;
+  }
+  // EndOfSpecific
+
   if (data === undefined) {
     show_error(t('messages', 'error_interfacefailure'),
       t('messages', 'error_current_event_not_loaded'));
