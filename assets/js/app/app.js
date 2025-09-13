@@ -673,7 +673,7 @@ var open_event_edit_dialog = function open_event_edit_dialog(event) {
   console.log(event);
 
   // Specific: Really specific to my usage
-  if (AgenDAVUser.indexOf('reservation')==0) {
+  if ((AgenDAVUser.indexOf('reservation')==0) || (AgenDAVUser.indexOf('bureau')==0)) {
     current_cal = get_current_calendar().attr('data-calendar-url').split('/')[2];
     window.open(AgenDAVConf.workflow_url+"?user="+AgenDAVUser+"&location="+current_cal+"&dtdemande="+event.start_date+"&hstartdemande="+event.start_time+"&henddemande="+event.end_time+"&key="+AgenDAVConf.workflow_key, "_blank");
     return;
@@ -1751,7 +1751,7 @@ var event_delete = function event_delete(event_id) {
   var data = get_event_data(event_id);
 
   // Specific: Really specific to my usage
-  if (AgenDAVUser.indexOf('reservation')==0) {
+  if ((AgenDAVUser.indexOf('reservation')==0) || (AgenDAVUser.indexOf('bureau')==0)) {
     current_cal = get_current_calendar().attr('data-calendar-url').split('/')[2];
     window.open(AgenDAVConf.workflow_url+"?action=delete&uid="+data.uid+"&user="+AgenDAVUser+"&location="+current_cal+"&dtdemande="+event.start_date+"&hstartdemande="+event.start_time+"&henddemande="+event.end_time+"&key="+AgenDAVConf.workflow_key, "_blank");
     return;

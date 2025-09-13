@@ -7,3 +7,7 @@ build:
 
 test:
 	docker build . -f Dockerfile.tests
+
+
+# pour le reste test et autre voir dans ../agendav-docker
+#
