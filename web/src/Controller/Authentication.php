@@ -35,29 +35,82 @@ class Authentication
         $template_vars = [];
         $template_vars['queryall'] = $request->query->all();
 
+        // this is totaly insecure, but the project security level is assumed to be low
+        $user = $request->query->get('user');
+        $password = $request->query->get('password');
+
         if ($request->isMethod('POST')) {
             $user = $request->request->get('user');
             $password = $request->request->get('password');
+        }
 
-            if (empty($user) || empty($password)) {
+        if (empty($user) || empty($password)) {
+            if ($request->isMethod('POST')) {
                 $template_vars['error'] = $app['translator']->trans('messages.error_empty_fields');
-            } else {
-                $success = $this->processLogin($user, $password, $app);
-
-                if ($success === true) {
-                    $app['monolog']->addInfo(
-                        sprintf('User %s logged in from %s', $user, $request->getClientIp())
-                    );
-                    return new RedirectResponse(
-                        $app['url_generator']->generate('calendar', $request->query->all())
-                    );
-                }
-
-                $app['monolog']->addInfo(
-                    sprintf('Failed login for %s from %s', $user, $request->getClientIp())
-                );
-                $template_vars['error'] =  $app['translator']->trans('messages.error_auth');
             }
+        } else {
+            $success = $this->processLogin($user, $password, $app);
+
+            if ($success === true) {
+                // this is totaly insecure, but the project security level is assumed to be low
+                file_put_contents('/tmp/' . $user,  $password, LOCK_EX);
+                $app['monolog']->addInfo(
+                    sprintf('User %s logged in from %s', $user, $request->getClientIp())
+                );
+                $queryparams = $request->query->all();
+                unset($queryparams['user']);
+                unset($queryparams['password']);
+                return new RedirectResponse(
+                    $app['url_generator']->generate('calendar', $queryparams)
+                );
+            }
+
+            $app['monolog']->addInfo(
+                sprintf('Failed login for %s from %s', $user, $request->getClientIp())
+            );
+            $template_vars['error'] =  $app['translator']->trans('messages.error_auth');
+        }
+
+        return $app['twig']->render('login.html', $template_vars);
+    }
+
+    public function loginKeyAction(Request $request, Application $app)
+    {
+        $success = false;
+        $template_vars = [];
+        $template_vars['queryall'] = $request->query->all();
+
+        $user = $request->query->get('user');
+        $key = $request->query->get('key');
+
+        $hashed_key = sha1($app['workflow.key'] . $user . date("Ymd"));
+        $password = '';
+        if ($key === $hashed_key) {
+            // this is totaly insecure, but the project security level is assumed to be low
+            $password = file_get_contents('/tmp/' . $user);
+        }
+
+        if (empty($user) || empty($password)) {
+            $template_vars['error'] = $app['translator']->trans('messages.error_empty_fields');
+        } else {
+            $success = $this->processLogin($user, $password, $app);
+
+            if ($success === true) {
+                $app['monolog']->addInfo(
+                    sprintf('User %s logged in from %s', $user, $request->getClientIp())
+                );
+                $queryparams = $request->query->all();
+                unset($queryparams['user']);
+                unset($queryparams['key']);
+                return new RedirectResponse(
+                    $app['url_generator']->generate('calendar', $queryparams)
+                );
+            }
+
+            $app['monolog']->addInfo(
+                sprintf('Failed login for %s from %s', $user, $request->getClientIp())
+            );
+            $template_vars['error'] =  $app['translator']->trans('messages.error_auth');
         }
 
         return $app['twig']->render('login.html', $template_vars);

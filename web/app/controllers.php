@@ -12,6 +12,7 @@ use AgenDAV\DateHelper;
 // Authentication
 $app->get('/login', '\AgenDAV\Controller\Authentication::loginAction')->bind('login');
 $app->post('/login', '\AgenDAV\Controller\Authentication::loginAction');
+$app->get('/loginkey', '\AgenDAV\Controller\Authentication::loginKeyAction')->bind('loginkey');
 $app->get('/logout', '\AgenDAV\Controller\Authentication::logoutAction')->bind('logout');
 
 // CSRF protection
