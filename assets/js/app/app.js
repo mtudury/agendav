@@ -675,7 +675,12 @@ var open_event_edit_dialog = function open_event_edit_dialog(event) {
   // Specific: Really specific to my usage
   if ((AgenDAVUser.indexOf('reservation')==0) || (AgenDAVUser.indexOf('bureau')==0)) {
     current_cal = get_current_calendar().attr('data-calendar-url').split('/')[2];
-    window.open(AgenDAVConf.workflow_url+"?user="+AgenDAVUser+"&location="+current_cal+"&dtdemande="+event.start_date+"&hstartdemande="+event.start_time+"&henddemande="+event.end_time+"&key="+AgenDAVConf.workflow_key, "_blank");
+    if (event.uid) {
+      window.open(AgenDAVConf.workflow_url+"?action=edit&uid="+event.uid+"&user="+AgenDAVUser+"&location="+current_cal+"&dtdemande="+event.start_date+"&hstartdemande="+event.start_time+"&henddemande="+event.end_time+"&key="+AgenDAVConf.workflow_key, "_blank");
+    }
+    else {
+      window.open(AgenDAVConf.workflow_url+"?user="+AgenDAVUser+"&location="+current_cal+"&dtdemande="+event.start_date+"&hstartdemande="+event.start_time+"&henddemande="+event.end_time+"&key="+AgenDAVConf.workflow_key, "_blank");
+    }
     return;
   }
   // EndOfSpecific
