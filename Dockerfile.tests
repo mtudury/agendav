@@ -1,11 +1,11 @@
 
-FROM composer:2.5 as composer
+FROM composer:2.5 AS composer
 
-FROM php:7.2 as builder
+FROM php:7.3 AS builder
 
 COPY --from=composer /usr/bin/composer /usr/bin/composer
 
-RUN apt update && apt install -y unzip
+RUN apt-get update && apt-get install -y unzip
 
 WORKDIR /app/
 COPY . /app
